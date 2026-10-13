@@ -1,0 +1,11 @@
+import { Head, Link, useForm } from '@inertiajs/react';
+
+export default function Register() {
+    const form = useForm({ username: '', first_name: '', last_name: '', email: '', password: '', password_confirmation: '' });
+    const submit = (event) => { event.preventDefault(); form.post('/register'); };
+    const fields = [
+        ['username', 'Username', 'text'], ['first_name', 'First name', 'text'], ['last_name', 'Last name', 'text'],
+        ['email', 'Email address', 'email'], ['password', 'Password', 'password'], ['password_confirmation', 'Confirm password', 'password'],
+    ];
+    return <><Head title="Create account" /><main className="grid min-h-screen place-items-center bg-slate-900 px-4 py-10"><section className="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl"><div className="bg-emerald-700 px-8 py-6 text-white"><h1 className="text-xl font-bold">Create a SeedTrack account</h1><p className="mt-1 text-xs text-emerald-100">New registrations receive staff access.</p></div><form onSubmit={submit} className="grid gap-4 p-7 sm:grid-cols-2 sm:p-8">{fields.map(([name, label, type]) => <div key={name}><label htmlFor={name} className="mb-1 block text-xs font-semibold">{label}</label><input id={name} type={type} autoComplete={name} value={form.data[name]} onChange={(event) => form.setData(name, event.target.value)} className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none focus:border-emerald-600" />{form.errors[name] && <p className="mt-1 text-xs text-rose-700">{form.errors[name]}</p>}</div>)}<button disabled={form.processing} className="rounded-lg bg-emerald-700 px-4 py-3 text-sm font-bold text-white hover:bg-emerald-800 disabled:opacity-50 sm:col-span-2">{form.processing ? 'Creating account…' : 'Create account'}</button><p className="text-center text-xs text-slate-600 sm:col-span-2">Already registered? <Link href="/login" className="font-semibold text-emerald-800 hover:underline">Sign in</Link></p></form></section></main></>;
+}

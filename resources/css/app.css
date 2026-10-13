@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: "Aptos", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+}
