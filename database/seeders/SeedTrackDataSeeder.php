@@ -39,11 +39,11 @@ class SeedTrackDataSeeder extends Seeder
                 ['PRRI000005', 'PSB Rc18', '2023-01-0005-1', 40, 92.8, 40, 'T683'],
             ] as [$accession, $name, $barcode, $weight, $viability, $packets, $location]
         ) {
-            $gid = Gid::updateOrCreate(
+            $gid = Gid::firstOrCreate(
                 ['accession_number' => $accession],
                 ['accession_name' => $name],
             );
-            $seeds[$accession] = ActiveSeed::updateOrCreate(
+            $seeds[$accession] = ActiveSeed::firstOrCreate(
                 ['barcode' => $barcode],
                 [
                     'gid_id' => $gid->id,
@@ -64,7 +64,7 @@ class SeedTrackDataSeeder extends Seeder
         ];
 
         foreach ($sampleRequests as $index => [$first, $last, $agency, $email, $town, $accession, $status, $weight, $studyTitle]) {
-            $requester = Requester::updateOrCreate(
+            $requester = Requester::firstOrCreate(
                 ['email' => $email],
                 [
                     'municipality_id' => $municipalities[$town]->id,
@@ -76,7 +76,7 @@ class SeedTrackDataSeeder extends Seeder
 
             $seed = $seeds[$accession];
             $tracking = now()->format('Y') . '-GBSR-' . str_pad((string) (9001 + $index), 4, '0', STR_PAD_LEFT);
-            $record = SeedRequest::updateOrCreate(
+            $record = SeedRequest::firstOrCreate(
                 ['tracking_no' => $tracking],
                 [
                     'requester_id' => $requester->id,
@@ -89,7 +89,7 @@ class SeedTrackDataSeeder extends Seeder
                     'date_dispatched' => $status === 'DISPATCHED' ? today() : null,
                 ],
             );
-            $record->lineItems()->updateOrCreate(
+            $record->lineItems()->firstOrCreate(
                 ['active_seed_id' => $seed->id],
                 ['stock_out' => $status === 'DISPATCHED' ? $weight : 0],
             );

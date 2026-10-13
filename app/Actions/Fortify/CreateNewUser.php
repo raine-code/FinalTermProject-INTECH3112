@@ -29,7 +29,7 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         Role::findOrCreate('Staff', 'web');
-        $user->assignRole('Staff');
+        $user->syncRoles('Staff');
 
         return $user;
     }

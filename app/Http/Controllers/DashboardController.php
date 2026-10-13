@@ -24,6 +24,10 @@ class DashboardController extends Controller
                 'currentRequests' => SeedRequest::where('status', 'PENDING')->count(),
             ],
             'requests' => $requests,
+            'calendarEvents' => SeedRequest::query()
+                ->whereNotNull('deadline_date')
+                ->whereIn('status', ['APPROVED', 'DISPATCHED'])
+                ->get(['id', 'tracking_no', 'deadline_date', 'status']),
             'canCreateRequest' => $request->user()->can('requests.create'),
             'isStaff' => $request->user()->hasRole('Staff'),
         ]);

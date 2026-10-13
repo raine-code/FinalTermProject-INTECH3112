@@ -1,0 +1,21 @@
+<svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="30" y1="20" x2="190" y2="190" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0E8A6B"/>
+      <stop offset="1" stop-color="#0E5A4B"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="74" y1="74" x2="148" y2="148" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F2FDEB"/>
+      <stop offset="1" stop-color="#D9F7E0"/>
+    </linearGradient>
+  </defs>
+  <rect x="15" y="15" width="190" height="190" rx="52" fill="url(#bg)"/>
+  <path d="M110 56C78.9 56 58 76.8 58 109.5C58 142.2 78.9 164 110 164C141.1 164 162 142.2 162 109.5C162 76.8 141.1 56 110 56Z" fill="url(#leaf)" opacity="0.16"/>
+  <path d="M109.5 52C134.5 88 145.5 111.3 145.5 134.3C145.5 150.4 132.7 163.5 116.5 163.5C103.3 163.5 90.1 155.9 81.8 142.7C95.2 136.9 106.2 124.8 109.5 105V52Z" fill="url(#leaf)"/>
+  <path d="M109.5 53C90.1 89.6 79.8 112.9 79.8 136C79.8 150.5 90.5 162.5 104.5 163.5V77.9C106.4 68.1 109.5 60 109.5 53Z" fill="white" fill-opacity="0.4"/>
+  <path d="M109.2 51.6C129 63.5 138.6 90 143.2 115.2C109.2 111 94.7 96.8 84.5 69.8C92.5 60 101 53.9 109.2 51.6Z" fill="#EAFBF1"/>
+  <path d="M110 107C120.5 98.2 132.5 89.8 146.5 86.1C137.2 107.2 125.4 120.8 110 127.1V107Z" fill="#C4F0D1"/>
+  <path d="M82 140C92.7 134 100 128.5 107 120.3C99.6 142.8 89.8 153.4 75 160.5C76.7 153.8 78.8 147.1 82 140Z" fill="#DFF7E6"/>
+  <path d="M109.9 96.6V165" stroke="#0B6A56" stroke-width="5" stroke-linecap="round"/>
+  <path d="M110 54.5C108.5 81.2 111.5 95.7 118.5 112.4" stroke="#0B6A56" stroke-width="5" stroke-linecap="round"/>
+</svg>

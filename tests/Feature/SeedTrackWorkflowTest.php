@@ -33,8 +33,7 @@ class SeedTrackWorkflowTest extends TestCase
         ])->assertRedirect('/dashboard');
 
         $user = User::where('email', 'newstaff@example.test')->firstOrFail();
-        $this->assertTrue($user->hasRole('Staff'));
-        $this->assertFalse($user->hasRole('Admin'));
+        $this->assertSame(['Staff'], $user->getRoleNames()->all());
     }
 
     public function test_user_can_sign_in_with_username(): void
@@ -60,6 +59,78 @@ class SeedTrackWorkflowTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseHas('requests', ['id' => $request->id, 'status' => 'PENDING']);
+    }
+
+    public function test_staff_cannot_view_inventory(): void
+    {
+        $staff = User::factory()->create();
+        $staff->assignRole('Staff');
+
+        $this->actingAs($staff)->get('/seeds')->assertForbidden();
+    }
+
+    public function test_admin_can_view_inventory(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
+
+        $this->actingAs($admin)->get('/seeds')->assertOk();
+    }
+
+    public function test_admin_and_staff_receive_the_same_deadline_calendar_events(): void
+    {
+        $request = SeedRequest::where('status', 'APPROVED')->firstOrFail();
+        $request->update(['deadline_date' => '2026-10-20']);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
+        $this->actingAs($admin)->get('/dashboard')->assertInertia(fn($page) => $page
+            ->component('Dashboard')
+            ->where('calendarEvents', fn($events) => collect($events)->contains(fn($event) =>
+            $event['tracking_no'] === $request->tracking_no
+                && $event['deadline_date'] === '2026-10-20'
+                && $event['status'] === 'APPROVED')));
+
+        $staff = User::factory()->create();
+        $staff->assignRole('Staff');
+        $this->actingAs($staff)->get('/dashboard')->assertInertia(fn($page) => $page
+            ->component('Dashboard')
+            ->where('calendarEvents', fn($events) => collect($events)->contains(fn($event) =>
+            $event['tracking_no'] === $request->tracking_no
+                && $event['deadline_date'] === '2026-10-20'
+                && $event['status'] === 'APPROVED')));
+    }
+
+    public function test_rerunning_data_seeder_does_not_reset_inventory_or_dispatch_state(): void
+    {
+        $seed = ActiveSeed::where('barcode', '2023-01-0001-1')->firstOrFail();
+        $seed->update(['current_weight' => 3]);
+
+        $request = SeedRequest::where('study_title', 'Rice Drought Resistance Study')->firstOrFail();
+        $request->update([
+            'status' => 'DISPATCHED',
+            'date_dispatched' => today(),
+            'deadline_date' => today()->addDays(2),
+        ]);
+        $lineItem = $request->lineItems()->firstOrFail();
+        $lineItem->update(['stock_out' => 5]);
+
+        $this->seed(SeedTrackDataSeeder::class);
+
+        $this->assertDatabaseHas('active_seeds', [
+            'id' => $seed->id,
+            'current_weight' => 3,
+        ]);
+        $this->assertDatabaseHas('requests', [
+            'id' => $request->id,
+            'status' => 'DISPATCHED',
+            'deadline_date' => today()->addDays(2)->toDateString(),
+        ]);
+        $this->assertDatabaseHas('request_line_items', [
+            'request_id' => $request->id,
+            'active_seed_id' => $lineItem->active_seed_id,
+            'stock_out' => 5,
+        ]);
     }
 
     public function test_admin_can_create_a_valid_seed_request(): void
@@ -178,6 +249,30 @@ class SeedTrackWorkflowTest extends TestCase
             ])
             ->assertRedirect('/scanner/' . $request->id)
             ->assertSessionHasErrors('barcode');
+
+        $this->assertDatabaseHas('requests', ['id' => $request->id, 'status' => 'APPROVED']);
+        $this->assertEquals($originalWeight, (float) $seed->fresh()->current_weight);
+    }
+
+    public function test_admin_cannot_scan_or_dispatch_even_with_stale_dispatch_permission(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('Admin');
+        $admin->givePermissionTo('requests.dispatch');
+        $request = SeedRequest::where('status', 'APPROVED')->with('lineItems.activeSeed')->firstOrFail();
+        $seed = $request->lineItems->first()->activeSeed;
+        $originalWeight = (float) $seed->current_weight;
+
+        $this->actingAs($admin)
+            ->get('/scanner/' . $request->id)
+            ->assertForbidden();
+
+        $this->actingAs($admin)
+            ->post('/requests/' . $request->id . '/dispatch', [
+                'barcode' => $seed->barcode,
+                'quantity_grams' => $request->weight_req,
+            ])
+            ->assertForbidden();
 
         $this->assertDatabaseHas('requests', ['id' => $request->id, 'status' => 'APPROVED']);
         $this->assertEquals($originalWeight, (float) $seed->fresh()->current_weight);

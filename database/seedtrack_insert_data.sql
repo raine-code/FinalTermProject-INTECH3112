@@ -334,11 +334,11 @@ INSERT INTO active_seeds (id, gid_id, name, current_weight, viability, barcode, 
 -- 5 requests
 -- -----------------------------------------------------------------------------
 INSERT INTO requests (id, requester_id, tracking_no, date_req, deadline_date, weight_req, study_title, status, date_approved, date_dispatched, created_at, updated_at) VALUES
-(1, 1, '2026-GBSR-0001', '2026-01-05', '2026-01-12', 10.00, 'The Role of Cytokinin in Regulating Genes Related to Grain Filling', 'DISPATCHED', '2026-01-07', '2026-01-08', NOW(), NOW()),
-(2, 2, '2026-GBSR-0002', '2026-02-12', '2026-02-18', 5.00, 'Rice Drought Resistance Study', 'APPROVED', '2026-02-14', NULL, NOW(), NOW()),
+(1, 1, '2026-GBSR-0001', '2026-01-05', '2026-01-12', 10.00, 'The Role of Cytokinin in Regulating Genes Related to Grain Filling', 'PENDING', NULL, NULL, NOW(), NOW()),
+(2, 2, '2026-GBSR-0002', '2026-02-12', '2026-02-18', 5.00, 'Rice Drought Resistance Study', 'PENDING', NULL, NULL, NOW(), NOW()),
 (3, 3, '2026-GBSR-0003', '2026-03-20', '2026-03-28', 8.00, 'Genetic Diversity of Traditional Rice', 'PENDING', NULL, NULL, NOW(), NOW()),
-(4, 4, '2026-GBSR-0004', '2026-04-02', '2026-04-10', 12.00, 'Seed Quality Assessment', 'REJECTED', NULL, NULL, NOW(), NOW()),
-(5, 5, '2026-GBSR-0005', '2026-05-15', '2026-05-22', 6.00, 'Rice Yield Improvement Project', 'APPROVED', '2026-05-17', '2026-05-18', NOW(), NOW());
+(4, 4, '2026-GBSR-0004', '2026-04-02', '2026-04-10', 12.00, 'Seed Quality Assessment', 'PENDING', NULL, NULL, NOW(), NOW()),
+(5, 5, '2026-GBSR-0005', '2026-05-15', '2026-05-22', 6.00, 'Rice Yield Improvement Project', 'PENDING', NULL, NULL, NOW(), NOW());
 
 -- -----------------------------------------------------------------------------
 -- request_line_items aligned one-to-many per request

@@ -149,8 +149,9 @@ class RequestController extends Controller
         return back()->with('success', 'Processing deadline updated.');
     }
 
-    public function scanner(SeedRequest $seedRequest): Response
+    public function scanner(Request $request, SeedRequest $seedRequest): Response
     {
+        abort_unless($request->user()->hasRole('Staff') && ! $request->user()->hasRole('Admin'), 403);
         abort_unless($seedRequest->status === 'APPROVED', 422);
 
         return Inertia::render('Scanner', [
@@ -160,6 +161,7 @@ class RequestController extends Controller
 
     public function dispatch(Request $request, SeedRequest $seedRequest): RedirectResponse
     {
+        abort_unless($request->user()->hasRole('Staff') && ! $request->user()->hasRole('Admin'), 403);
         $validated = $request->validate([
             'barcode' => ['required', 'string', 'max:100'],
             'quantity_grams' => ['required', 'numeric', 'gt:0'],

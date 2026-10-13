@@ -29,21 +29,11 @@ class RolesAndPermissionsSeeder extends Seeder
         }
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        Role::findOrCreate('Admin', 'web')->syncPermissions($permissions);
-        Role::findOrCreate('Manager', 'web')->syncPermissions([
-            'requests.view',
-            'requests.create',
-            'requests.approve',
-            'inventory.view',
-            'inventory.manage',
-            'analytics.view',
-        ]);
+        Role::findOrCreate('Admin', 'web')->syncPermissions(array_diff($permissions, ['requests.dispatch']));
         Role::findOrCreate('Staff', 'web')->syncPermissions([
             'requests.view',
             'requests.dispatch',
-            'inventory.view',
         ]);
-        Role::findOrCreate('User', 'web');
 
         $admin = config('seedtrack.admin');
         if (filled($admin['email']) && filled($admin['username']) && filled($admin['password'])) {

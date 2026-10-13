@@ -45,7 +45,7 @@ SeedTrack is the Laravel conversion of the SEED inventory and requisition protot
 - Admin/Manager permissions cover request creation and approval, inventory management, and analytics. Staff can view requests and inventory and dispatch approved requests.
 - Request creation stores a requester, request, and seed line item in one transaction. Dispatch checks the approved state, scanned barcode, requested weight, and locked inventory inside a transaction before updating stock and request status.
 - The root Blade template is `resources/views/app.blade.php`; React pages live in `resources/js/Pages` and use Laravel routes with Inertia forms for server-side validation feedback.
-- Roles and permissions are defined in `database/seeders/RolesAndPermissionsSeeder.php`; domain/reference demo data is in `SeedTrackDataSeeder.php`.
+- Roles and permissions are defined in `database/seeders/RolesAndPermissionsSeeder.php`. `SeedTrackDataSeeder.php` contains sample fixtures for feature tests and is intentionally excluded from the default application seeder.
 
 ## Verification
 
