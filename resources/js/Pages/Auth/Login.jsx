@@ -17,13 +17,11 @@ export default function Login() {
 
                 <section className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-white/95 shadow-[0_30px_80px_rgba(2,6,23,0.55)] backdrop-blur-sm">
                     <div className="bg-gradient-to-r from-[#0f766e] via-[#0d8a6e] to-[#0b6e59] px-8 py-8 text-center text-white">
-                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-white/10 shadow-inner shadow-emerald-900/20">
-                            <img
-                                src="/images/Logo.svg"
-                                alt="SeedTrack logo"
-                                className="h-10 w-10 object-contain"
-                            />
-                        </div>
+                        <img
+                            src="/images/Logo.svg"
+                            alt="SeedTrack logo"
+                            className="mx-auto mb-4 h-20 w-20 object-contain"
+                        />
                         <h1 className="text-[2rem] font-black tracking-tight">
                             SeedTrack
                         </h1>
