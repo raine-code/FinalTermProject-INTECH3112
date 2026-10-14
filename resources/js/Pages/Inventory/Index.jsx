@@ -1,32 +1,51 @@
-import { Head, Link } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
-import { FaPlus, FaSearch } from 'react-icons/fa';
-import Layout from '../Shared/Layout';
+import { Head, Link } from "@inertiajs/react";
+import { useMemo, useState } from "react";
+import { FaPlus, FaSearch } from "react-icons/fa";
+import Layout from "../Shared/Layout";
 
 export default function Index({ seeds }) {
-    const [query, setQuery] = useState('');
-    const [availability, setAvailability] = useState('ALL');
-    const filtered = useMemo(() => seeds.filter((seed) => {
-        const content = `${seed.name} ${seed.barcode} ${seed.gid?.accession_number || ''} ${seed.location || ''}`.toLowerCase();
-        return (availability === 'ALL' || seed.availability === availability) && content.includes(query.toLowerCase());
-    }), [seeds, query, availability]);
+    const [query, setQuery] = useState("");
+    const [availability, setAvailability] = useState("ALL");
+    const filtered = useMemo(
+        () =>
+            seeds.filter((seed) => {
+                const content =
+                    `${seed.name} ${seed.barcode} ${seed.gid?.accession_number || ""} ${seed.location || ""}`.toLowerCase();
+                return (
+                    (availability === "ALL" ||
+                        seed.availability === availability) &&
+                    content.includes(query.toLowerCase())
+                );
+            }),
+        [seeds, query, availability],
+    );
     return (
         <Layout>
             <Head title="Seed inventory" />
             <main className="mx-auto flex h-full min-h-0 max-w-7xl flex-1 flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
                 <header className="flex shrink-0 flex-wrap items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-extrabold text-slate-900">Seed Inventory</h1>
-                        <p className="mt-1 text-sm text-slate-500">Accessions, viability, barcode records, and storage locations.</p>
+                        <h1 className="text-2xl font-extrabold text-slate-900">
+                            Seed Inventory
+                        </h1>
+                        <p className="mt-1 text-sm text-slate-500">
+                            Accessions, viability, barcode records, and storage
+                            locations.
+                        </p>
                     </div>
-                    <Link href="/seeds/create" className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-xs font-bold text-white">
+                    <Link
+                        href="/seeds/create"
+                        className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-xs font-bold text-white"
+                    >
                         <FaPlus /> Register seed
                     </Link>
                 </header>
 
                 <section className="flex shrink-0 flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
                     <label className="relative w-full sm:max-w-sm">
-                        <span className="sr-only">Search seeds by name, barcode, or accession</span>
+                        <span className="sr-only">
+                            Search seeds by name, barcode, or accession
+                        </span>
                         <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
                         <input
                             value={query}
@@ -36,16 +55,21 @@ export default function Index({ seeds }) {
                         />
                     </label>
                     <div className="flex gap-1.5 overflow-x-auto pb-1">
-                        {['ALL', 'AVAILABLE', 'RESERVED', 'UNAVAILABLE'].map((filter) => (
-                            <button
-                                key={filter}
-                                type="button"
-                                onClick={() => setAvailability(filter)}
-                                className={`whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[10px] font-semibold ${availability === filter ? 'bg-slate-900 text-white' : 'border border-slate-200 bg-slate-50 text-slate-600'}`}
-                            >
-                                {filter === 'ALL' ? 'All' : filter[0] + filter.slice(1).toLowerCase()}
-                            </button>
-                        ))}
+                        {["ALL", "AVAILABLE", "RESERVED", "UNAVAILABLE"].map(
+                            (filter) => (
+                                <button
+                                    key={filter}
+                                    type="button"
+                                    onClick={() => setAvailability(filter)}
+                                    className={`whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[10px] font-semibold ${availability === filter ? "bg-slate-900 text-white" : "border border-slate-200 bg-slate-50 text-slate-600"}`}
+                                >
+                                    {filter === "ALL"
+                                        ? "All"
+                                        : filter[0] +
+                                          filter.slice(1).toLowerCase()}
+                                </button>
+                            ),
+                        )}
                     </div>
                 </section>
 
@@ -57,9 +81,13 @@ export default function Index({ seeds }) {
                                 <th className="px-4 py-3">Accession</th>
                                 <th className="px-4 py-3">Variety</th>
                                 <th className="px-4 py-3 text-right">Weight</th>
-                                <th className="px-4 py-3 text-right">Viability</th>
+                                <th className="px-4 py-3 text-right">
+                                    Viability
+                                </th>
                                 <th className="px-4 py-3">Barcode</th>
-                                <th className="px-4 py-3 text-right">Packets</th>
+                                <th className="px-4 py-3 text-right">
+                                    Packets
+                                </th>
                                 <th className="px-4 py-3">Location</th>
                                 <th className="px-4 py-3">Availability</th>
                                 <th className="px-4 py-3">Action</th>
@@ -68,29 +96,64 @@ export default function Index({ seeds }) {
                         <tbody className="divide-y divide-slate-100">
                             {filtered.map((seed) => (
                                 <tr key={seed.id} className="hover:bg-slate-50">
-                                    <td className="px-4 py-3.5 font-mono">#{seed.id}</td>
-                                    <td className="px-4 py-3.5 font-mono text-slate-500">{seed.gid?.accession_number || '-'}</td>
-                                    <td className="px-4 py-3.5 font-semibold">{seed.name}</td>
-                                    <td className="px-4 py-3.5 text-right font-mono">{seed.current_weight} g</td>
-                                    <td className="px-4 py-3.5 text-right">{seed.viability}%</td>
-                                    <td className="px-4 py-3.5 font-mono text-emerald-800">{seed.barcode}</td>
-                                    <td className="px-4 py-3.5 text-right">{seed.stock_on_hand}</td>
-                                    <td className="px-4 py-3.5">{seed.location || '-'}</td>
+                                    <td className="px-4 py-3.5 font-mono">
+                                        #{seed.id}
+                                    </td>
+                                    <td className="px-4 py-3.5 font-mono text-slate-500">
+                                        {seed.gid?.accession_number || "-"}
+                                    </td>
+                                    <td className="px-4 py-3.5 font-semibold">
+                                        {seed.name}
+                                    </td>
+                                    <td className="px-4 py-3.5 text-right font-mono">
+                                        {seed.current_weight} g
+                                    </td>
+                                    <td className="px-4 py-3.5 text-right">
+                                        {seed.viability}%
+                                    </td>
+                                    <td className="px-4 py-3.5 font-mono text-emerald-800">
+                                        {seed.barcode}
+                                    </td>
+                                    <td className="px-4 py-3.5 text-right">
+                                        {seed.stock_on_hand}
+                                    </td>
                                     <td className="px-4 py-3.5">
-                                        <span className={`rounded-full border px-2 py-1 text-[10px] font-semibold ${seed.availability === 'AVAILABLE' ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : seed.availability === 'RESERVED' ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-rose-200 bg-rose-50 text-rose-800'}`}>
+                                        {seed.location || "-"}
+                                    </td>
+                                    <td className="px-4 py-3.5">
+                                        <span
+                                            className={`rounded-full border px-2 py-1 text-[10px] font-semibold ${seed.availability === "AVAILABLE" ? "border-emerald-200 bg-emerald-50 text-emerald-800" : seed.availability === "RESERVED" ? "border-amber-200 bg-amber-50 text-amber-800" : "border-rose-200 bg-rose-50 text-rose-800"}`}
+                                        >
                                             {seed.availability}
                                         </span>
                                     </td>
                                     <td className="whitespace-nowrap px-4 py-3.5">
-                                        <Link href={`/seeds/${seed.id}`} className="font-semibold text-emerald-800 hover:underline">View</Link>
-                                        <span className="mx-1 text-slate-300">|</span>
-                                        <Link href={`/seeds/${seed.id}/edit`} className="font-semibold text-slate-600 hover:underline">Edit</Link>
+                                        <Link
+                                            href={`/seeds/${seed.id}`}
+                                            className="font-semibold text-emerald-800 hover:underline"
+                                        >
+                                            View
+                                        </Link>
+                                        <span className="mx-1 text-slate-300">
+                                            |
+                                        </span>
+                                        <Link
+                                            href={`/seeds/${seed.id}/edit`}
+                                            className="font-semibold text-slate-600 hover:underline"
+                                        >
+                                            Edit
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
                             {filtered.length === 0 && (
                                 <tr>
-                                    <td colSpan="10" className="px-4 py-12 text-center text-slate-500">No seed records match your search.</td>
+                                    <td
+                                        colSpan="10"
+                                        className="px-4 py-12 text-center text-slate-500"
+                                    >
+                                        No seed records match your search.
+                                    </td>
                                 </tr>
                             )}
                         </tbody>

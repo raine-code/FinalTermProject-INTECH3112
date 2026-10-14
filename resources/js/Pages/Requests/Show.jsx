@@ -1,13 +1,131 @@
-import { Head, Link, router, usePage } from '@inertiajs/react';
-import { FaArrowLeft, FaEdit, FaTrash } from 'react-icons/fa';
-import Layout from '../Shared/Layout';
+import { Head, Link, router, usePage } from "@inertiajs/react";
+import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
+import Layout from "../Shared/Layout";
 
 export default function Show({ requestRecord }) {
     const { auth = {} } = usePage().props;
     const permissions = auth.permissions || [];
     const line = requestRecord.line_items?.[0];
-    const canEdit = permissions.includes('requests.create') && requestRecord.status === 'PENDING';
-    const canDelete = permissions.includes('requests.create') && ['PENDING', 'REJECTED'].includes(requestRecord.status);
-    const remove = () => { if (window.confirm(`Delete ${requestRecord.tracking_no}?`)) router.delete(`/requests/${requestRecord.id}`); };
-    return <Layout><Head title={requestRecord.tracking_no} /><main className="mx-auto max-w-4xl space-y-5 px-4 py-7 sm:px-6"><Link href="/requests" className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600"><FaArrowLeft />All requests</Link><header className="flex flex-wrap items-start justify-between gap-3"><div><p className="font-mono text-xs font-bold text-emerald-800">{requestRecord.tracking_no}</p><h1 className="mt-1 text-2xl font-extrabold text-slate-900">{requestRecord.study_title}</h1></div><span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold">{requestRecord.status}</span></header><section className="grid gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2"><div><p className="text-[10px] font-bold uppercase text-slate-400">Requester</p><p className="mt-1 font-semibold">{requestRecord.requester?.first_name} {requestRecord.requester?.last_name}</p><p className="text-sm text-slate-500">{requestRecord.requester?.agency || 'Individual requester'}</p><p className="text-sm text-slate-500">{requestRecord.requester?.email}</p><p className="text-sm text-slate-500">{requestRecord.requester?.municipality?.town}, {requestRecord.requester?.municipality?.province}</p></div><div><p className="text-[10px] font-bold uppercase text-slate-400">Seed request</p><p className="mt-1 font-semibold">{line?.active_seed?.name}</p><p className="font-mono text-sm text-slate-500">{line?.active_seed?.barcode}</p><p className="mt-2 text-sm text-slate-600">Requested: <strong>{requestRecord.weight_req} g</strong></p><p className="text-sm text-slate-600">Dispatched: <strong>{line?.stock_out || 0} g</strong></p></div><div className="border-t border-slate-100 pt-4"><p className="text-[10px] font-bold uppercase text-slate-400">Submitted</p><p className="mt-1 text-sm">{requestRecord.date_req}</p></div><div className="border-t border-slate-100 pt-4"><p className="text-[10px] font-bold uppercase text-slate-400">Deadline</p><p className="mt-1 text-sm">{requestRecord.deadline_date || 'Not set'}</p></div></section><div className="flex flex-wrap gap-2">{canEdit && <Link href={`/requests/${requestRecord.id}/edit`} className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-xs font-bold text-white"><FaEdit />Edit</Link>}{canDelete && <button type="button" onClick={remove} className="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-4 py-2.5 text-xs font-bold text-rose-700"><FaTrash />Delete</button>}{permissions.includes('requests.dispatch') && requestRecord.status === 'APPROVED' && <Link href={`/scanner/${requestRecord.id}`} className="rounded-lg bg-blue-700 px-4 py-2.5 text-xs font-bold text-white">Scan & dispatch</Link>}</div></main></Layout>;
+    const canEdit =
+        permissions.includes("requests.create") &&
+        requestRecord.status === "PENDING";
+    const canDelete =
+        permissions.includes("requests.create") &&
+        ["PENDING", "REJECTED"].includes(requestRecord.status);
+    const remove = () => {
+        if (window.confirm(`Delete ${requestRecord.tracking_no}?`))
+            router.delete(`/requests/${requestRecord.id}`);
+    };
+    return (
+        <Layout>
+            <Head title={requestRecord.tracking_no} />
+            <main className="mx-auto max-w-4xl space-y-5 px-4 py-7 sm:px-6">
+                <Link
+                    href="/requests"
+                    className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600"
+                >
+                    <FaArrowLeft />
+                    All requests
+                </Link>
+                <header className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <p className="font-mono text-xs font-bold text-emerald-800">
+                            {requestRecord.tracking_no}
+                        </p>
+                        <h1 className="mt-1 text-2xl font-extrabold text-slate-900">
+                            {requestRecord.study_title}
+                        </h1>
+                    </div>
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold">
+                        {requestRecord.status}
+                    </span>
+                </header>
+                <section className="grid gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2">
+                    <div>
+                        <p className="text-[10px] font-bold uppercase text-slate-400">
+                            Requester
+                        </p>
+                        <p className="mt-1 font-semibold">
+                            {requestRecord.requester?.first_name}{" "}
+                            {requestRecord.requester?.last_name}
+                        </p>
+                        <p className="text-sm text-slate-500">
+                            {requestRecord.requester?.agency ||
+                                "Individual requester"}
+                        </p>
+                        <p className="text-sm text-slate-500">
+                            {requestRecord.requester?.email}
+                        </p>
+                        <p className="text-sm text-slate-500">
+                            {requestRecord.requester?.municipality?.town},{" "}
+                            {requestRecord.requester?.municipality?.province}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-[10px] font-bold uppercase text-slate-400">
+                            Seed request
+                        </p>
+                        <p className="mt-1 font-semibold">
+                            {line?.active_seed?.name}
+                        </p>
+                        <p className="font-mono text-sm text-slate-500">
+                            {line?.active_seed?.barcode}
+                        </p>
+                        <p className="mt-2 text-sm text-slate-600">
+                            Requested:{" "}
+                            <strong>{requestRecord.weight_req} g</strong>
+                        </p>
+                        <p className="text-sm text-slate-600">
+                            Dispatched:{" "}
+                            <strong>{line?.stock_out || 0} g</strong>
+                        </p>
+                    </div>
+                    <div className="border-t border-slate-100 pt-4">
+                        <p className="text-[10px] font-bold uppercase text-slate-400">
+                            Submitted
+                        </p>
+                        <p className="mt-1 text-sm">{requestRecord.date_req}</p>
+                    </div>
+                    <div className="border-t border-slate-100 pt-4">
+                        <p className="text-[10px] font-bold uppercase text-slate-400">
+                            Deadline
+                        </p>
+                        <p className="mt-1 text-sm">
+                            {requestRecord.deadline_date || "Not set"}
+                        </p>
+                    </div>
+                </section>
+                <div className="flex flex-wrap gap-2">
+                    {canEdit && (
+                        <Link
+                            href={`/requests/${requestRecord.id}/edit`}
+                            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-xs font-bold text-white"
+                        >
+                            <FaEdit />
+                            Edit
+                        </Link>
+                    )}
+                    {canDelete && (
+                        <button
+                            type="button"
+                            onClick={remove}
+                            className="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-4 py-2.5 text-xs font-bold text-rose-700"
+                        >
+                            <FaTrash />
+                            Delete
+                        </button>
+                    )}
+                    {permissions.includes("requests.dispatch") &&
+                        requestRecord.status === "APPROVED" && (
+                            <Link
+                                href={`/scanner/${requestRecord.id}`}
+                                className="rounded-lg bg-blue-700 px-4 py-2.5 text-xs font-bold text-white"
+                            >
+                                Scan & dispatch
+                            </Link>
+                        )}
+                </div>
+            </main>
+        </Layout>
+    );
 }

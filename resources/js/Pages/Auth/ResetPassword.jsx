@@ -1,7 +1,86 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function ResetPassword({ email, token }) {
-    const form = useForm({ email: email || '', token: token || '', password: '', password_confirmation: '' });
-    const submit = (event) => { event.preventDefault(); form.post('/reset-password'); };
-    return <><Head title="Choose a new password" /><main className="grid min-h-screen place-items-center bg-slate-900 px-4"><form onSubmit={submit} className="w-full max-w-md space-y-5 rounded-2xl bg-white p-8 shadow-2xl"><h1 className="text-xl font-bold">Choose a new password</h1><input type="hidden" value={form.data.token} /><label className="block text-xs font-semibold">Email<input type="email" value={form.data.email} onChange={(event) => form.setData('email', event.target.value)} className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm" />{form.errors.email && <span className="text-rose-700">{form.errors.email}</span>}</label><label className="block text-xs font-semibold">New password<input type="password" value={form.data.password} onChange={(event) => form.setData('password', event.target.value)} className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm" />{form.errors.password && <span className="text-rose-700">{form.errors.password}</span>}</label><label className="block text-xs font-semibold">Confirm password<input type="password" value={form.data.password_confirmation} onChange={(event) => form.setData('password_confirmation', event.target.value)} className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm" /></label><button disabled={form.processing} className="w-full rounded-lg bg-emerald-700 px-4 py-3 text-sm font-bold text-white">Update password</button><Link href="/login" className="block text-center text-xs text-emerald-800">Back to sign in</Link></form></main></>;
+    const form = useForm({
+        email: email || "",
+        token: token || "",
+        password: "",
+        password_confirmation: "",
+    });
+    const submit = (event) => {
+        event.preventDefault();
+        form.post("/reset-password");
+    };
+    return (
+        <>
+            <Head title="Choose a new password" />
+            <main className="grid min-h-screen place-items-center bg-slate-900 px-4">
+                <form
+                    onSubmit={submit}
+                    className="w-full max-w-md space-y-5 rounded-2xl bg-white p-8 shadow-2xl"
+                >
+                    <h1 className="text-xl font-bold">Choose a new password</h1>
+                    <input type="hidden" value={form.data.token} />
+                    <label className="block text-xs font-semibold">
+                        Email
+                        <input
+                            type="email"
+                            value={form.data.email}
+                            onChange={(event) =>
+                                form.setData("email", event.target.value)
+                            }
+                            className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                        />
+                        {form.errors.email && (
+                            <span className="text-rose-700">
+                                {form.errors.email}
+                            </span>
+                        )}
+                    </label>
+                    <label className="block text-xs font-semibold">
+                        New password
+                        <input
+                            type="password"
+                            value={form.data.password}
+                            onChange={(event) =>
+                                form.setData("password", event.target.value)
+                            }
+                            className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                        />
+                        {form.errors.password && (
+                            <span className="text-rose-700">
+                                {form.errors.password}
+                            </span>
+                        )}
+                    </label>
+                    <label className="block text-xs font-semibold">
+                        Confirm password
+                        <input
+                            type="password"
+                            value={form.data.password_confirmation}
+                            onChange={(event) =>
+                                form.setData(
+                                    "password_confirmation",
+                                    event.target.value,
+                                )
+                            }
+                            className="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm"
+                        />
+                    </label>
+                    <button
+                        disabled={form.processing}
+                        className="w-full rounded-lg bg-emerald-700 px-4 py-3 text-sm font-bold text-white"
+                    >
+                        Update password
+                    </button>
+                    <Link
+                        href="/login"
+                        className="block text-center text-xs text-emerald-800"
+                    >
+                        Back to sign in
+                    </Link>
+                </form>
+            </main>
+        </>
+    );
 }
